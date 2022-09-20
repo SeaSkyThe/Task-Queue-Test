@@ -1,0 +1,59 @@
+version: '3.5'
+services:
+  redis:
+    image: redis:4.0.14-alpine3.11
+    restart: unless-stopped
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65536
+        hard: 65536
+    command: redis-server --port 6379
+    ports:
+      - 6379:6379
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
+  huey:
+    image: python:3.7-alpine3.15
+    restart: unless-stopped
+    volumes:
+      - ./project:/root/project
+    command: >
+      sh -c "
+            pip install -r /root/project/requirements.txt &&
+            python /root/project/async_tasks/manage.py run_huey -w 10 -v 3
+          "
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
+    environment:
+      - REDIS_HOST=redis
+    links:
+      - redis
+    
+
+  
+  project:
+    image: python:3.7-alpine3.15
+    restart: unless-stopped
+    #build: .
+    volumes:
+      - ./project:/root/project
+    command: >
+      sh -c "
+            pip install -r /root/project/requirements.txt &&
+            python /root/project/async_tasks/manage.py migrate &&
+            python /root/project/async_tasks/manage.py runserver 0.0.0.0:8000 --insecure"
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - REDIS_HOST=redis
+   
+     
+   
