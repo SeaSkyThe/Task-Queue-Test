@@ -5,5 +5,5 @@ from django.urls import include
 from . import views
 
 urlpatterns = [
-    path('tasks/', views.count_beans, name='count_beans'),
+    path("count/<int:beans>", views.count_beans, name='count_beans'),
 ]

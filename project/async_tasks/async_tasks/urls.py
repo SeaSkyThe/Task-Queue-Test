@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from tasks import urls
+from task_runner import urls
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('tasks_app/', include('tasks.urls')),
+    path('tasks_app/', include('task_runner.urls')),
 ]

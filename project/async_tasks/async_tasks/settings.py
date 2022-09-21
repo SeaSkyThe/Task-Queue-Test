@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tasks_app.apps.TasksAppConfig',
+    'task_runner.apps.TaskRunnerConfig',
     'huey.contrib.djhuey',
 ]
 

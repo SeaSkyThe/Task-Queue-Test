@@ -24,6 +24,7 @@ services:
     command: >
       sh -c "
             pip install -r /root/project/requirements.txt &&
+            python /root/project/async_tasks/manage.py migrate &&
             python /root/project/async_tasks/manage.py run_huey -w 10 -v 3
           "
     logging:
@@ -36,8 +37,6 @@ services:
     links:
       - redis
     
-
-  
   project:
     image: python:3.7-alpine3.15
     restart: unless-stopped
